@@ -7,8 +7,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Sirupsen/logrus"
-	secop "github.com/fardog/secureoperator"
 	"github.com/miekg/dns"
 )
 
@@ -34,9 +32,6 @@ type DNSProxyConfig struct {
 }
 
 func NewDNSProxy(c DNSProxyConfig) *DNSProxy {
-	// Suppress standard logger for secureoperator
-	logrus.SetLevel(logrus.ErrorLevel)
-
 	// fix dns address
 	if c.PublicDNS != "" {
 		_, _, err := net.SplitHostPort(c.PublicDNS)
@@ -96,18 +91,6 @@ func (s *DNSProxy) Start() error {
 		log.Printf("info: Use %s as private DNS for %s domains category='DNS-Proxy'", s.PrivateDNS, s.NoProxyDomains)
 	}
 
-	// Prepare external DNS handler
-	provider, err := secop.NewGDNSProvider(s.Endpoint, &secop.GDNSOptions{
-		Pad: true,
-	})
-
-	if err != nil {
-		log.Fatalf("alert: %s category='DNS-Proxy'", err)
-	}
-
-	options := &secop.HandlerOptions{}
-	publicOverHTTPSHandler := secop.NewHandler(provider, options)
-
 	// Setup DNS Handler
 	dnsHandle := func(w dns.ResponseWriter, req *dns.Msg) {
 		if len(req.Question) == 0 {
@@ -127,12 +110,6 @@ func (s *DNSProxy) Start() error {
 				s.handlePrivate(w, req)
 				return
 			}
-		}
-
-		// Resolve by public DNS over HTTPS over http proxy
-		if s.DNSOverHTTPSEnabled {
-			publicOverHTTPSHandler.Handle(w, req)
-			return
 		}
 
 		// Resolve by specified public DNS over http proxy

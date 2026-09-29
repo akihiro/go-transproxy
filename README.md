@@ -40,10 +40,6 @@ Options:
 
   -disable-iptables
     	Disable automatic iptables configuration
-  -dns-over-https-enabled
-        Use DNS-over-HTTPS service as public DNS
-  -dns-over-https-endpoint string
-        DNS-over-HTTPS endpoint URL (default "https://dns.google.com/resolve")
   -dns-over-tcp-disabled
         Disable DNS-over-TCP for querying to public DNS
   -dns-proxy-listen [host]:port
@@ -100,20 +96,6 @@ docker run --rm -it centos curl http://www.google.com
 The document has moved
 <A HREF="http://www.google.co.jp/?gfe_rd=cr&amp;dcr=0&amp;ei=GCKtWbD0AaLEXuTmr7gK">here</A>.
 </BODY></HTML>
-```
-
-If your proxy doesn't support CONNECT method to DNS port, it cannot resolve public domain name transparently.
-Fortunately, Google privides [DNS-over-HTTPS service](https://developers.google.com/speed/public-dns/docs/dns-over-https), so you can use this service as public DNS by adding `-dns-over-https-enabled` option instead of `-public-dns` option as below even if your proxy supports CONNECT method to 443 port only.
-
-```
-sudo -E transproxy -private-dns 192.168.0.100 -dns-over-https-enabled
-```
-
-If you can resolve all domains directly from local LAN, run command without dns related options as below. 
-It disables DNS-Proxy.
-
-```
-sudo -E transproxy
 ```
 
 If you need to use both public DNS and private DNS, and need to use public DNS directly, run command with `-dns-over-tcp-disabled` option as below.

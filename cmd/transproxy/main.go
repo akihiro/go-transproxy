@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"math/rand"
 	"net"
 	"os"
 	"os/signal"
@@ -12,7 +11,6 @@ import (
 	"strconv"
 	"strings"
 	"syscall"
-	"time"
 
 	"github.com/comail/colog"
 	transproxy "github.com/wadahiro/go-transproxy"
@@ -67,17 +65,8 @@ var (
 	dnsOverTCPDisabled = fs.Bool(
 		"dns-over-tcp-disabled", false, "Disable DNS-over-TCP for querying to public DNS")
 
-	dnsOverHTTPSEnabled = fs.Bool(
-		"dns-over-https-enabled", false, "Use DNS-over-HTTPS service as public DNS")
-
-	dnsOverHTTPSEndpoint = fs.String(
-		"dns-over-https-endpoint",
-		"https://dns.google.com/resolve",
-		"DNS-over-HTTPS endpoint URL",
-	)
-
-	dnsEnableTCP    = fs.Bool("dns-tcp", true, "DNS Listen on TCP")
-	dnsEnableUDP    = fs.Bool("dns-udp", true, "DNS Listen on UDP")
+	dnsEnableTCP = fs.Bool("dns-tcp", true, "DNS Listen on TCP")
+	dnsEnableUDP = fs.Bool("dns-udp", true, "DNS Listen on UDP")
 	disableIPTables = fs.Bool("disable-iptables", false, "Disable automatic iptables configuration")
 )
 
@@ -89,9 +78,6 @@ func main() {
 		fs.PrintDefaults()
 	}
 	fs.Parse(os.Args[1:])
-
-	// seed the global random number generator, used in secureoperator
-	rand.Seed(time.Now().UTC().UnixNano())
 
 	// setup logger
 	colog.SetDefaultLevel(colog.LDebug)
@@ -152,10 +138,8 @@ func startAllProxy(level colog.Level) {
 			ListenAddress:       *dnsProxyListenAddress,
 			EnableUDP:           *dnsEnableUDP,
 			EnableTCP:           *dnsEnableTCP,
-			Endpoint:            *dnsOverHTTPSEndpoint,
 			PublicDNS:           *publicDNS,
 			PrivateDNS:          *privateDNS,
-			DNSOverHTTPSEnabled: *dnsOverHTTPSEnabled,
 			NoProxyDomains:      np.Domains,
 		},
 	)
@@ -264,7 +248,7 @@ func startExplicitProxy() {
 }
 
 func useDNSProxy() bool {
-	if *privateDNS == "" && *publicDNS == "" && !*dnsOverHTTPSEnabled {
+	if *privateDNS == "" && *publicDNS == "" {
 		return false
 	}
 	return true
