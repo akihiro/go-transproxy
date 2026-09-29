@@ -20,7 +20,7 @@ One is a simple proxy delegating to upstream your proxy, another is for adding `
 ## Install
 
 ### Binaly install
-Download from [Releases page](https://github.com/wadahiro/go-transproxy/releases).
+Download from [Releases page](https://github.com/akihiro/go-transproxy/releases).
 
 ### Source install
 Use Go 1.13 for the build.
@@ -141,5 +141,5 @@ Licensed under the [MIT](/LICENSE) license.
 
 ## Author
 
-[Hiroyuki Wada](https://github.com/wadahiro)
+- original author [Hiroyuki Wada](https://github.com/wadahiro)
 

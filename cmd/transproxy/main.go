@@ -15,7 +15,7 @@ import (
 	"time"
 
 	"github.com/comail/colog"
-	transproxy "github.com/wadahiro/go-transproxy"
+	transproxy "github.com/akihiro/go-transproxy"
 )
 
 func orPanic(err error) {
