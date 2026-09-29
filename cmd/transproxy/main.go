@@ -18,12 +18,6 @@ import (
 	transproxy "github.com/wadahiro/go-transproxy"
 )
 
-func orPanic(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
-
 var (
 	fs       = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	loglevel = fs.String(

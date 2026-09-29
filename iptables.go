@@ -51,8 +51,8 @@ func NewIPTables(c *IPTablesConfig) (*IPTables, error) {
 		h, p, err := net.SplitHostPort(c.PublicDNS)
 		if err != nil {
 			c.PublicDNS = net.JoinHostPort(c.PublicDNS, "53")
+			h, p, _ = net.SplitHostPort(c.PublicDNS)
 		}
-		h, p, _ = net.SplitHostPort(c.PublicDNS)
 		dnsTCPOutRule = []string{NAT, OUTPUT, "-p", "tcp", "-d", h, "--dport", p, "-j", "REDIRECT", "--to-ports", strconv.Itoa(c.TCPToPort)}
 	}
 
@@ -132,11 +132,11 @@ func (t *IPTables) Check(rule []string) {
 
 	exists, err := t.iptables.Exists(rule[0], rule[1], rule[2:]...)
 	if exists {
-		t.err = fmt.Errorf("Same iptables rule already exists : iptables -t %s -I %s", rule[0], strings.Join(rule[1:], " "))
+		t.err = fmt.Errorf("same iptables rule already exists : iptables -t %s -I %s", rule[0], strings.Join(rule[1:], " "))
 	}
 
 	if err != nil {
-		t.err = fmt.Errorf("Checking iptables rule failed : %s", err.Error())
+		t.err = fmt.Errorf("checking iptables rule failed : %s", err.Error())
 	}
 }
 
@@ -146,7 +146,7 @@ func (t *IPTables) insertRule(rule []string) {
 	}
 
 	if err := t.iptables.Insert(rule[0], rule[1], 1, rule[2:]...); err != nil {
-		t.err = fmt.Errorf("Insert iptables rule failed : %s", err.Error())
+		t.err = fmt.Errorf("insert iptables rule failed : %s", err.Error())
 	}
 }
 
@@ -157,6 +157,6 @@ func (t *IPTables) deleteRule(rule []string) {
 	}
 
 	if err := t.iptables.Delete(rule[0], rule[1], rule[2:]...); err != nil {
-		t.err = fmt.Errorf("Delete iptables rule failed : %s", err.Error())
+		t.err = fmt.Errorf("delete iptables rule failed : %s", err.Error())
 	}
 }

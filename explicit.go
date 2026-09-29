@@ -13,7 +13,6 @@ import (
 
 type ExplicitProxy struct {
 	ExplicitProxyConfig
-	user     string
 	category string
 	// For HTTP
 	proxyTransport     *http.Transport
