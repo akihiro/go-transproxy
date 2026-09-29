@@ -82,8 +82,8 @@ var (
 		"DNS-over-HTTPS endpoint URL",
 	)
 
-	dnsEnableTCP = fs.Bool("dns-tcp", true, "DNS Listen on TCP")
-	dnsEnableUDP = fs.Bool("dns-udp", true, "DNS Listen on UDP")
+	dnsEnableTCP    = fs.Bool("dns-tcp", true, "DNS Listen on TCP")
+	dnsEnableUDP    = fs.Bool("dns-udp", true, "DNS Listen on UDP")
 	disableIPTables = fs.Bool("disable-iptables", false, "Disable automatic iptables configuration")
 )
 
