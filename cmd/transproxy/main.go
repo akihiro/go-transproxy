@@ -264,7 +264,7 @@ func startExplicitProxy() {
 }
 
 func useDNSProxy() bool {
-	if *privateDNS == "" && *publicDNS == "" && *dnsOverHTTPSEnabled == false {
+	if *privateDNS == "" && *publicDNS == "" && !*dnsOverHTTPSEnabled {
 		return false
 	}
 	return true
