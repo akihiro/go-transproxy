@@ -101,9 +101,10 @@ func Pipe(srcConn *TCPConn, destConn net.Conn) {
 	go func() error {
 		defer wg.Done()
 
-		buf := pool.Get().([]byte)
+		p := pool.Get()
+		buf := p.([]byte)
 		_, err := io.CopyBuffer(destConn, srcConn, buf)
-		pool.Put(buf)
+		pool.Put(p)
 		if hc, ok := destConn.(netutil.HalfCloser); ok {
 			hc.CloseWrite()
 		}
@@ -115,9 +116,10 @@ func Pipe(srcConn *TCPConn, destConn net.Conn) {
 	go func() error {
 		defer wg.Done()
 
-		buf := pool.Get().([]byte)
+		p := pool.Get()
+		buf := p.([]byte)
 		_, err := io.CopyBuffer(srcConn, destConn, buf)
-		pool.Put(buf)
+		pool.Put(p)
 		srcConn.CloseWrite()
 		if hc, ok := destConn.(netutil.HalfCloser); ok {
 			hc.CloseRead()
